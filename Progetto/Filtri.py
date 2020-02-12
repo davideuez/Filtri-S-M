@@ -56,12 +56,14 @@ photo1 = PhotoImage(file = r"/Users/Utente/Desktop/Filtri_S-M/filtri/images/Tato
 photo2 = PhotoImage(file = r"/Users/Utente/Desktop/Filtri_S-M/filtri/images/mustache.gif")
 photo3 = PhotoImage(file = r"/Users/Utente/Desktop/Filtri_S-M/filtri/images/Magnum_P.I._logo.gif")
 photo4 = PhotoImage(file = r"/Users/Utente/Desktop/Filtri_S-M/filtri/images/jojo-lucca-comics-and-games-2019-araki-star-comics-week-day.gif")
-  
+photo5 = PhotoImage(file = r"/Users/Utente/Desktop/Filtri_S-M/filtri/images/Bandaged-Teddy-Bear-main.gif")
+
 # Resizing images to fit on buttons 
 photoimage1 = photo1.subsample(4,4)
 photoimage2 = photo2.subsample(9,9)
 photoimage3 = photo3.subsample(15,15)
 photoimage4 = photo4.subsample(20,20)
+photoimage5 = photo5.subsample(9,9)
 
 ##Create 5 buttons and assign their corresponding function to active sprites
 btn1 = Button(root, text="Tattoos Filter", command= lambda: apply_filter_1(), image = photoimage1, compound = TOP)
@@ -76,7 +78,7 @@ btn3.pack(side="top", fill="both", expand="no", padx="5", pady="5")
 btn4 = Button(root, text="NANI?!?!?!!", command= lambda: apply_filter_4(), image = photoimage4, compound = TOP)
 btn4.pack(side="top", fill="both", expand="no", padx="5", pady="5")
 
-btn5 = Button(root, text="Filtro 5", command= lambda: apply_filter_5(), compound = TOP)
+btn5 = Button(root, text="Ouch", command= lambda: apply_filter_5(), image = photoimage5, compound = TOP)
 btn5.pack(side="top", fill="both", expand="no", padx="5", pady="5")
 
 descriptionText = """\nHow to use the app:\n\n- Click one button above to open the camera with the filter\n- Press SPACE to take a screenshot or ESC to exit\n- If you like/dislike the photo you can save or delete it"""
@@ -144,10 +146,8 @@ def apply_filter_1():
     cap = cv2.VideoCapture(0)
     cv2.namedWindow("Effetto 1")
     cv2.moveWindow("Effetto 1", 400, 0)
-
-
+    
     k=0
-
     while True:
         _, frame = cap.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
@@ -317,6 +317,8 @@ def apply_filter_4():
     cv2.namedWindow("Effetto 4")
     cv2.moveWindow("Effetto 4", 400, 0)
     k=0
+    Z = -np.ones([5,5], dtype = int)
+    Z [3,3] = 25  
     while True:
         _, frame = cap.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
@@ -338,16 +340,12 @@ def apply_filter_4():
             th,tw,tc = nani.shape
             
             jxl = landmarks.part(1).x-tw
-            jxr = landmarks.part(17).x+tw
-            
+           
             for i in range(fh):
                 for j in range(fw):
                     if i<th and j<tw:
                         if nani[i,j,3]>0:    
                             frame[y1+i, jxl+j] = nani[i,j]
-                    
-            Z = -np.ones([5,5], dtype = int)
-            Z [3,3] = 25               
             k=k+1
             cv2.imshow("JoJo!", frame)
 
@@ -360,14 +358,14 @@ def apply_filter_4():
             frame = cv2.filter2D(frame, -1, Z)
             takeSnapshot(frame)
             break
-
+    
     cap.release()
     cv2.destroyAllWindows()
 
 def apply_filter_5():
     cap = cv2.VideoCapture(0)
-    cv2.namedWindow("Effetto 4")
-    cv2.moveWindow("Effetto 4", 400, 0)
+    cv2.namedWindow("Effetto 5")
+    cv2.moveWindow("Effetto 5", 400, 0)
     k=0
     while True:
         _, frame = cap.read()
@@ -403,7 +401,7 @@ def apply_filter_5():
                             frame[y1m+i, x1m+j] = gj_png[i,j]  
                             
             k=k+1
-            cv2.imshow("Effetto 3", frame)
+            cv2.imshow("Ouch", frame)
 
         wait = cv2.waitKey(1)
 
@@ -413,6 +411,8 @@ def apply_filter_5():
         elif wait%256 == 32: # SPACE pressed
             takeSnapshot(frame)
             break
+    cap.release()
+    cv2.destroyAllWindows()
 
 def createSnapWindow(frame, filename):
 
